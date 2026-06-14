@@ -7,11 +7,21 @@ import argparse
 import math
 import subprocess
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 
 def video_id(url: str) -> str:
-    return urlparse(url).path.strip("/")
+    parsed = urlparse(url)
+    query_id = parse_qs(parsed.query).get("v", [None])[0]
+    if query_id:
+        return query_id
+
+    parts = [part for part in parsed.path.split("/") if part]
+    if parts and parts[0] in {"embed", "shorts", "live"} and len(parts) > 1:
+        return parts[1]
+    if parts:
+        return parts[-1]
+    return "youtube_video"
 
 
 def run(cmd: list[str]) -> None:
