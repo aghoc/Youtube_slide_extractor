@@ -29,6 +29,35 @@ brew install yt-dlp ffmpeg
 
 별도의 Python 서드파티 패키지는 필요하지 않습니다.
 
+## yt-dlp로 영상 다운로드 확인하기
+
+이 프로젝트는 내부적으로 `yt-dlp`를 호출해 YouTube 영상을 다운로드합니다. 슬라이드 추출을 실행하기 전에 `yt-dlp`가 정상 동작하는지 먼저 확인해보면 문제를 빠르게 분리할 수 있습니다.
+
+가장 간단한 다운로드 예시는 다음과 같습니다.
+
+```bash
+yt-dlp "https://youtu.be/VIDEO_ID"
+```
+
+파일명을 지정해서 다운로드하려면 `-o` 옵션을 사용합니다.
+
+```bash
+yt-dlp -o "video.%(ext)s" "https://youtu.be/VIDEO_ID"
+```
+
+이 프로젝트의 추출 스크립트와 비슷하게 720p 이하의 영상/음성을 받아 mp4로 병합하려면 다음처럼 실행할 수 있습니다.
+
+```bash
+yt-dlp \
+  --no-playlist \
+  -f "bv*[height<=720]+ba/b[height<=720]/best" \
+  --merge-output-format mp4 \
+  -o "source.%(ext)s" \
+  "https://youtu.be/VIDEO_ID"
+```
+
+이 명령이 실패한다면 `yt-dlp` 업데이트가 필요하거나, 해당 영상의 접근 권한/지역 제한/로그인 요구사항 때문에 다운로드가 막힌 것일 수 있습니다.
+
 ## yt-dlp 업데이트
 
 YouTube는 플레이어와 다운로드 동작을 자주 바꿉니다. 이 때문에 오래된 `yt-dlp` 버전에서는 다운로드 실패, extractor 오류, 추가 challenge 처리 문제 등이 생길 수 있습니다.
@@ -123,16 +152,6 @@ python3 extract_youtube_slides.py --sample-interval 2.0 "https://youtu.be/VIDEO_
 ```
 
 비슷한 슬라이드가 너무 많이 남는다면 `--dedupe-distance` 값을 올리고, 서로 다른 슬라이드가 하나로 합쳐지는 것 같다면 값을 낮춰보세요.
-
-## GitHub 업로드 참고
-
-생성 결과물은 Git에 포함하지 않도록 `.gitignore`에 등록되어 있습니다.
-
-```text
-output/
-```
-
-PDF, 추출 이미지, 원본 프레임, 다운로드된 영상 캐시 등은 저장소에 올리지 않고, 스크립트와 문서만 커밋하는 것을 권장합니다.
 
 ## 라이선스
 
