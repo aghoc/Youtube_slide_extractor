@@ -1,0 +1,25 @@
+# Generated outputs
+output/
+
+# Downloaded or intermediate media
+*.mp4
+*.mkv
+*.webm
+*.mov
+*.m4a
+*.part
+*.ytdl
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS/editor noise
+.DS_Store
+.idea/
+.vscode/
+
+# Local scratch
+tmp/
